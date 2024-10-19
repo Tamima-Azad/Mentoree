@@ -57,17 +57,21 @@ public class profile extends AppCompatActivity {
 
         // Get user email from intent and encode it
         Intent intent = getIntent();
-        String userEmail = intent.getStringExtra("USER_EMAIL2"); // Get the email
-
+        String userEmail = intent.getStringExtra("USER_EMAIL2");
+        intent.putExtra("USER_EMAIL4", userEmail);
         String encodedEmail = encodeEmail(userEmail);
         databaseReference = FirebaseDatabase.getInstance().getReference(encodedEmail).child(encodedEmail);
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                ImageLoader imageLoader = new ImageLoader();
                 String profilePicUrl = dataSnapshot.child("profilePictureUrl").getValue(String.class);
                 String coverPicUrl = dataSnapshot.child("coverPhotoUrl").getValue(String.class);
-
+                ImageView profileImageView = findViewById(R.id.profilePicture);
+                imageLoader.loadImageIntoImageView(profilePicUrl, profileImageView, 450, 600, R.drawable.defaultpic);
+                ImageView coverImageView = findViewById(R.id.coverPhoto);
+                imageLoader.loadImageIntoImageView(coverPicUrl, coverImageView, 450, 600, R.drawable.coverphoto);
                 if (profilePicUrl != null) {
                     ImageView imageView = findViewById(R.id.profilePicture);
                     Picasso.get().load(profilePicUrl).placeholder(R.drawable.defaultpic).into(imageView);

@@ -36,8 +36,11 @@ public class HomePage extends AppCompatActivity {
     private DatabaseReference databaseReference;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
         ImageButton profilePictureButton = findViewById(R.id.profilePictureButton);
@@ -54,6 +57,30 @@ public class HomePage extends AppCompatActivity {
                 Intent profileIntent = new Intent(HomePage.this, profile.class);
                 profileIntent.putExtra("USER_EMAIL2", userEmail); // Pass user email to profile
                 startActivity(profileIntent);
+            }
+        });
+        // Initialize Firebase Storage
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference(encodedEmail).child(encodedEmail);
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ImageLoader imageLoader = new ImageLoader();
+                String profilePicUrl = dataSnapshot.child("profilePictureUrl").getValue(String.class);
+                ImageView profileImageView = findViewById(R.id.profilePictureButton);
+                imageLoader.loadImageIntoImageView(profilePicUrl, profileImageView, 450, 600, R.drawable.defaultpic);
+                if (profilePicUrl != null) {
+                    ImageView imageView = findViewById(R.id.profilePictureButton);
+                    Picasso.get().load(profilePicUrl).placeholder(R.drawable.defaultpic).into(imageView);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle possible errors.
+                Log.e("FirebaseError", "Error retrieving image URL", databaseError.toException());
             }
         });
 

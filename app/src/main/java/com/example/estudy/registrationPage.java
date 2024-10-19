@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -150,7 +151,6 @@ public class registrationPage extends AppCompatActivity implements View.OnClickL
                             FirebaseUser firebaseUser = nAuth.getCurrentUser();
                             String profilePictureUrl = "https://your-storage-url/profile.jpg";
                             String coverPhotoUrl = "https://your-storage-url/cover.jpg";
-
                             saveUserInfo(firebaseUser.getEmail(), password, name, phone, profilePictureUrl, coverPhotoUrl);
                         } else {
                             Toast.makeText(registrationPage.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -164,7 +164,6 @@ public class registrationPage extends AppCompatActivity implements View.OnClickL
         DatabaseReference myRef = database.getReference(encodeEmail(email)); // Store under the "users" node
 
         user usr = new user(name, password, phone, email, profilePictureUrl, coverPhotoUrl);
-
         myRef.child(encodeEmail(email)).setValue(usr).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

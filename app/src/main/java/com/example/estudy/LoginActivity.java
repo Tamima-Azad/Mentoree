@@ -133,6 +133,7 @@ public class LoginActivity extends AppCompatActivity {
                         // Password is correct, proceed to profile activity
                         Intent intent = new Intent(LoginActivity.this, HomePage.class);
                         intent.putExtra("USER_EMAIL", userUserName);
+                        intent.putExtra("USER_EMAIL3", userUserName);
                         startActivity(intent);
                     } else {
                         Toast.makeText(LoginActivity.this, "Incorrect password", Toast.LENGTH_SHORT).show();
@@ -174,10 +175,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private void showExitConfirmationDialog() {
         new AlertDialog.Builder(this)
-                .setTitle("Exit App")
-                .setMessage("Are you sure you want to exit?")
-                .setPositiveButton("Yes", (dialog, which) -> finish())
-                .setNegativeButton("No", null)
-                .show();
+            .setTitle("Exit App")
+            .setMessage("Are you sure you want to exit?")
+            .setPositiveButton("Yes", (dialog, which) -> finish())
+            .setNegativeButton("No", null)
+            .show();
     }
 }
