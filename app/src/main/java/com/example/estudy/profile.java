@@ -69,9 +69,9 @@ public class profile extends AppCompatActivity {
                 String profilePicUrl = dataSnapshot.child("profilePictureUrl").getValue(String.class);
                 String coverPicUrl = dataSnapshot.child("coverPhotoUrl").getValue(String.class);
                 ImageView profileImageView = findViewById(R.id.profilePicture);
-                imageLoader.loadImageIntoImageView(profilePicUrl, profileImageView, 450, 600, R.drawable.defaultpic);
+                imageLoader.loadImageIntoImageView(profilePicUrl, profileImageView, 180, 180, R.drawable.defaultpic);
                 ImageView coverImageView = findViewById(R.id.coverPhoto);
-                imageLoader.loadImageIntoImageView(coverPicUrl, coverImageView, 450, 600, R.drawable.coverphoto);
+                imageLoader.loadImageIntoImageView(coverPicUrl, coverImageView, 820, 360, R.drawable.coverphoto);
                 if (profilePicUrl != null) {
                     ImageView imageView = findViewById(R.id.profilePicture);
                     Picasso.get().load(profilePicUrl).placeholder(R.drawable.defaultpic).into(imageView);
