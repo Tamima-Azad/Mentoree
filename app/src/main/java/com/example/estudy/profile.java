@@ -35,7 +35,7 @@ public class profile extends AppCompatActivity {
     private ImageView profilePicture, coverPhoto;
     private Uri imageUri;
     public TextView pName;
-    private Button logout;
+    private ImageView logout;
     // Firebase references
     private FirebaseStorage storage;
     private StorageReference storageReference;

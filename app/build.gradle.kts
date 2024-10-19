@@ -1,11 +1,11 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.application) version "8.5.2"
     alias(libs.plugins.google.gms.google.services)
 }
 
 android {
     namespace = "com.example.estudy"
-
+6
     defaultConfig {
         applicationId = "com.example.estudy"
         minSdk = 24
