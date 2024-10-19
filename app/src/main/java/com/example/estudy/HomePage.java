@@ -53,7 +53,7 @@ public class HomePage extends AppCompatActivity {
         profilePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create a new intent for navigating to the profile activity
+                //Toast.makeText(HomePage.this, "Profile e jamela", Toast.LENGTH_LONG).show();
                 Intent profileIntent = new Intent(HomePage.this, profile.class);
                 profileIntent.putExtra("USER_EMAIL2", userEmail); // Pass user email to profile
                 startActivity(profileIntent);
@@ -70,7 +70,7 @@ public class HomePage extends AppCompatActivity {
                 ImageLoader imageLoader = new ImageLoader();
                 String profilePicUrl = dataSnapshot.child("profilePictureUrl").getValue(String.class);
                 ImageView profileImageView = findViewById(R.id.profilePictureButton);
-                imageLoader.loadImageIntoImageView(profilePicUrl, profileImageView, 450, 600, R.drawable.defaultpic);
+                imageLoader.loadImageIntoImageView(profilePicUrl, profileImageView, 100, 100, R.drawable.defaultpic);
                 if (profilePicUrl != null) {
                     ImageView imageView = findViewById(R.id.profilePictureButton);
                     Picasso.get().load(profilePicUrl).placeholder(R.drawable.defaultpic).into(imageView);

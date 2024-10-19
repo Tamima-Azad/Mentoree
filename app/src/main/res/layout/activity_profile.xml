@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,121 +9,125 @@
     android:orientation="vertical"
     tools:context=".profile">
 
-    <androidx.cardview.widget.CardView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_margin="3dp">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <!-- Cover photo ImageView -->
-            <ImageView
-                android:id="@+id/coverPhoto"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop" />
+                android:layout_height="200dp"
+                android:layout_margin="3dp">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/custume_edit_shape_rect" />
-        </FrameLayout>
-    </androidx.cardview.widget.CardView>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="-65dp">
+                    <ImageView
+                        android:id="@+id/coverPhoto"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop" />
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/custume_edit_shape_rect" />
+                </FrameLayout>
+            </androidx.cardview.widget.CardView>
 
-            <!-- Profile picture ImageView -->
-            <ImageView
-                android:id="@+id/profilePicture"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop" />
+            <androidx.cardview.widget.CardView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="-65dp">
 
-            <View
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/profilePicture"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop" />
+
+                    <View
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/custume_edit_shape_rect" />
+                </FrameLayout>
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/profileName"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@drawable/custume_edit_shape_rect" />
-        </FrameLayout>
-    </androidx.cardview.widget.CardView>
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="6dp"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/profileName"
-        android:layout_width="wrap_content"
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/menuBar"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="6dp"
-        android:textColor="@color/black"
-        android:textSize="25sp"
-        android:textStyle="bold" />
+        android:background="@color/purple"
+        android:orientation="horizontal"
+        android:padding="5dp">
 
-    <Button
-        android:id="@+id/EditProfileButton"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="6dp"
-        android:backgroundTint="@color/purple"
-        android:text="Edit Profile"
-        android:textColor="@color/white"
-        android:textSize="20sp" />
+        <ImageButton
+            android:id="@+id/HomeButton"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/home_icon"
+            android:contentDescription="Home"
+            android:layout_weight="1" />
 
-    <Button
-        android:id="@+id/HomeButton"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginRight="6dp"
-        android:backgroundTint="@color/purple"
-        android:text="Home"
-        android:textColor="@color/white"
-        android:textSize="20sp" />
+        <ImageButton
+            android:id="@+id/MyMentorsButton"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/mentor_icon"
+            android:contentDescription="My Mentors"
+            android:layout_weight="1" />
 
-    <Button
-        android:id="@+id/MyMentorsButton"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginRight="6dp"
-        android:backgroundTint="@color/purple"
-        android:text="My Mentors"
-        android:textColor="@color/white"
-        android:textSize="20sp" />
+        <ImageButton
+            android:id="@+id/MyPostButton"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/baseline_text_snippet_24"
+            android:contentDescription="My Post"
+            android:layout_weight="1"/>
 
-    <Button
-        android:id="@+id/MyPostButton"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginRight="6dp"
-        android:backgroundTint="@color/purple"
-        android:text="My Post"
-        android:textColor="@color/white"
-        android:textSize="20sp" />
-
-    <Button
-        android:id="@+id/LogOutButton"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginRight="6dp"
-        android:backgroundTint="@color/purple"
-        android:text="Log Out"
-        android:textColor="@color/white"
-        android:textSize="20sp" />
+        <ImageButton
+            android:id="@+id/LogOutButton"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="Log Out Icon"
+            android:src="@drawable/baseline_logout_24"
+            android:layout_weight="1" />
+    </LinearLayout>
 
 </LinearLayout>
