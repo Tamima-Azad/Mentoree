@@ -36,7 +36,6 @@ public class HomePage extends AppCompatActivity {
     private DatabaseReference databaseReference;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -84,7 +83,7 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
-        ImageButton notificationButton = findViewById(R.id.notificationButton);
+        ImageButton notificationButton = findViewById(R.id.HomeNotificationButton);
         notificationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -18,11 +18,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.util.concurrent.ForwardingListeningExecutorService;
+import com.google.firebase.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -40,6 +43,7 @@ public class profile extends AppCompatActivity {
     private FirebaseStorage storage;
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
+    private FirebaseAuth nAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +99,9 @@ public class profile extends AppCompatActivity {
             isProfilePicture = true;
             openImagePicker();
         });
+        nAuth = FirebaseAuth.getInstance();
         logout.setOnClickListener(v -> {
+            nAuth.signOut();
             Intent intent1 = new Intent(profile.this, LoginActivity.class);
             startActivity(intent1);
             finish();
