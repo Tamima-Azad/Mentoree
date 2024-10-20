@@ -71,8 +71,155 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="6dp"
                 android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/EditName"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+
+                android:hint="Name"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:drawableRight="@drawable/edit_icon"
+                android:textColorHighlight="@color/cardview_dark_background"
+                android:textColorHint="@color/black"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/EditContactNo"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+
+                android:hint="Contact Number"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:drawableRight="@drawable/edit_icon"
+                android:textColorHighlight="@color/cardview_dark_background"
+                android:textColorHint="@color/black"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/EditEducation"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+
+                android:hint="Education"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:drawableRight="@drawable/edit_icon"
+                android:textColorHighlight="@color/cardview_dark_background"
+                android:textColorHint="@color/black"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/EditCurrentWorkplace"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+
+                android:hint="Workplace"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:drawableRight="@drawable/edit_icon"
+                android:textColorHighlight="@color/cardview_dark_background"
+                android:textColorHint="@color/black"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/EditSocialLinks"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+
+                android:hint="Social Links"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:drawableRight="@drawable/edit_icon"
+                android:textColorHighlight="@color/cardview_dark_background"
+                android:textColorHint="@color/black"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/EditHomeTown"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+
+                android:hint="Hometown"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:drawableRight="@drawable/edit_icon"
+                android:textColorHighlight="@color/cardview_dark_background"
+                android:textColorHint="@color/black"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/EditCurrentCity"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+
+                android:hint="Current City or Town"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:drawableRight="@drawable/edit_icon"
+                android:textColorHighlight="@color/cardview_dark_background"
+                android:textColorHint="@color/black"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/EditSkills"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+
+                android:hint="Skills"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:drawableRight="@drawable/edit_icon"
+                android:textColorHighlight="@color/cardview_dark_background"
+                android:textColorHint="@color/black"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/EditAboutMe"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+
+                android:hint="About me"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:drawableRight="@drawable/edit_icon"
+                android:textColorHighlight="@color/cardview_dark_background"
+                android:textColorHint="@color/black"
+                android:textSize="18sp"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="save"
+                android:layout_gravity="right"
+                android:layout_margin="10dp"
+                android:id="@+id/ProfileSaveButton"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                android:textColor="@color/white"/>
+
+
 
         </LinearLayout>
 
@@ -141,14 +288,14 @@
 
         <ImageButton
             android:id="@+id/ProfileProfilePictureButton"
-            android:layout_width="40dp"
+            android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_marginLeft="16dp"
             android:background="@drawable/circle_shape"
             android:contentDescription="Profile"
             android:scaleType="centerCrop"
-            android:padding="15dp"
+            android:layout_weight="1"
             android:src="@drawable/profilephoto" />
 
 
