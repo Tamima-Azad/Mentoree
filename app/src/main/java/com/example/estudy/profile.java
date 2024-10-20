@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,14 +19,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.util.concurrent.ForwardingListeningExecutorService;
-import com.google.firebase.Firebase;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -43,7 +41,7 @@ public class profile extends AppCompatActivity {
     private FirebaseStorage storage;
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
-    private FirebaseAuth nAuth;
+    private ImageButton myPostButton, homeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +73,7 @@ public class profile extends AppCompatActivity {
                 ImageView profileImageView = findViewById(R.id.profilePicture);
                 imageLoader.loadImageIntoImageView(profilePicUrl, profileImageView, 180, 180, R.drawable.defaultpic);
                 ImageView coverImageView = findViewById(R.id.coverPhoto);
-                imageLoader.loadImageIntoImageView(coverPicUrl, coverImageView, 820, 360, R.drawable.coverphoto);
+                imageLoader.loadImageIntoImageView(coverPicUrl, coverImageView, 620, 360, R.drawable.coverphoto);
                 if (profilePicUrl != null) {
                     ImageView imageView = findViewById(R.id.profilePicture);
                     Picasso.get().load(profilePicUrl).placeholder(R.drawable.defaultpic).into(imageView);
@@ -99,9 +97,7 @@ public class profile extends AppCompatActivity {
             isProfilePicture = true;
             openImagePicker();
         });
-        nAuth = FirebaseAuth.getInstance();
         logout.setOnClickListener(v -> {
-            nAuth.signOut();
             Intent intent1 = new Intent(profile.this, LoginActivity.class);
             startActivity(intent1);
             finish();
@@ -113,6 +109,20 @@ public class profile extends AppCompatActivity {
 
         // Call to retrieve user info
         retrieveUserInfo();
+        myPostButton = findViewById(R.id.ProfileMyPostButton);
+        myPostButton.setOnClickListener(v -> {
+            Intent intent2 = new Intent(profile.this, PostPage.class);
+            startActivity(intent2);
+        });
+
+        homeButton = findViewById(R.id.ProfileHomeButton);
+        homeButton.setOnClickListener(v -> {
+            Intent intent1 = new Intent(profile.this, HomePage.class);
+            intent1.putExtra("USER_EMAIL", userEmail);
+            startActivity(intent1);
+            finish();
+        });
+
     }
 
     private void openImagePicker() {
@@ -121,11 +131,9 @@ public class profile extends AppCompatActivity {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             imageUri = data.getData();
             if (imageUri != null) {
@@ -147,7 +155,6 @@ public class profile extends AppCompatActivity {
             }
         }
     }
-
     private void retrieveUserInfo() {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -157,19 +164,14 @@ public class profile extends AppCompatActivity {
                     if (name != null) {
                         pName.setText(name); // Set the name in the TextView
                     }
-                } else {
-                    Toast.makeText(profile.this, "User data not found", Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(profile.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-
     private void uploadImageToFirebase(final String imageType) {
         if (imageUri != null) {
             // Create a unique file name for the image

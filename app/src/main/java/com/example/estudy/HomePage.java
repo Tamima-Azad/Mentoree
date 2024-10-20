@@ -36,13 +36,14 @@ public class HomePage extends AppCompatActivity {
     private DatabaseReference databaseReference;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
-        ImageButton profilePictureButton = findViewById(R.id.profilePictureButton);
+        ImageButton profilePictureButton = findViewById(R.id.HomeProfilePictureButton);
         Intent intent = getIntent();
         String userEmail = intent.getStringExtra("USER_EMAIL");
         String encodedEmail = encodeEmail(userEmail);
@@ -52,7 +53,6 @@ public class HomePage extends AppCompatActivity {
         profilePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(HomePage.this, "Profile e jamela", Toast.LENGTH_LONG).show();
                 Intent profileIntent = new Intent(HomePage.this, profile.class);
                 profileIntent.putExtra("USER_EMAIL2", userEmail); // Pass user email to profile
                 startActivity(profileIntent);
@@ -68,10 +68,10 @@ public class HomePage extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ImageLoader imageLoader = new ImageLoader();
                 String profilePicUrl = dataSnapshot.child("profilePictureUrl").getValue(String.class);
-                ImageView profileImageView = findViewById(R.id.profilePictureButton);
-                imageLoader.loadImageIntoImageView(profilePicUrl, profileImageView, 100, 100, R.drawable.defaultpic);
+                ImageView profileImageView = findViewById(R.id.HomeProfilePictureButton);
+                imageLoader.loadImageIntoImageView(profilePicUrl, profileImageView, 100, 120, R.drawable.defaultpic);
                 if (profilePicUrl != null) {
-                    ImageView imageView = findViewById(R.id.profilePictureButton);
+                    ImageView imageView = findViewById(R.id.HomeProfilePictureButton);
                     Picasso.get().load(profilePicUrl).placeholder(R.drawable.defaultpic).into(imageView);
                 }
             }
@@ -88,6 +88,52 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HomePage.this, Notification.class);
+                startActivity(intent);
+            }
+        });
+
+        ImageButton HomeHomeButton = findViewById(R.id.HomeHomeButton);
+        HomeHomeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomePage.this, HomePage.class);
+                intent.putExtra("USER_EMAIL", userEmail);
+                startActivity(intent);
+            }
+        });
+
+        ImageButton HomeMyMentorsButton = findViewById(R.id.HomeMyMentorsButton);
+        HomeMyMentorsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomePage.this, MentorList.class);
+                startActivity(intent);
+            }
+        });
+
+        ImageButton HomeMyPostButton = findViewById(R.id.HomeMyPostButton);
+        HomeMyPostButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomePage.this, PostPage.class);
+                startActivity(intent);
+            }
+        });
+
+        ImageButton HomeSearchBar = findViewById(R.id.HomeSearchBar);
+        HomeSearchBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomePage.this, SearchPage.class);
+                startActivity(intent);
+            }
+        });
+
+        ImageButton HomeLogOutButton = findViewById(R.id.HomeLogOutButton);
+        HomeLogOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomePage.this, LoginActivity.class);
                 startActivity(intent);
             }
         });
