@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Estudy"
         tools:targetApi="31">
         <activity
+            android:name=".SearchPage"
+            android:exported="false" />
+        <activity
             android:name=".New_password_set"
             android:exported="false" />
         <activity
@@ -23,6 +26,9 @@
             android:exported="false" />
         <activity
             android:name=".Notification"
+            android:exported="false" />
+        <activity
+            android:name=".PostPage"
             android:exported="false" />
         <activity
             android:name=".MentorList"

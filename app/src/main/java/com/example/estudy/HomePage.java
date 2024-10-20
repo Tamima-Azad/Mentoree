@@ -48,6 +48,8 @@ public class HomePage extends AppCompatActivity {
         String userEmail = intent.getStringExtra("USER_EMAIL");
         String encodedEmail = encodeEmail(userEmail);
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference(encodeEmail(userEmail)).child(encodedEmail);
+
+
         profilePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,7 +70,7 @@ public class HomePage extends AppCompatActivity {
                 ImageLoader imageLoader = new ImageLoader();
                 String profilePicUrl = dataSnapshot.child("profilePictureUrl").getValue(String.class);
                 ImageView profileImageView = findViewById(R.id.profilePictureButton);
-                imageLoader.loadImageIntoImageView(profilePicUrl, profileImageView, 100, 120, R.drawable.defaultpic);
+                imageLoader.loadImageIntoImageView(profilePicUrl, profileImageView, 100, 100, R.drawable.defaultpic);
                 if (profilePicUrl != null) {
                     ImageView imageView = findViewById(R.id.profilePictureButton);
                     Picasso.get().load(profilePicUrl).placeholder(R.drawable.defaultpic).into(imageView);

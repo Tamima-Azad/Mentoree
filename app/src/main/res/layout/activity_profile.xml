@@ -87,7 +87,7 @@
         android:padding="5dp">
 
         <ImageButton
-            android:id="@+id/HomeButton"
+            android:id="@+id/ProfileHomeButton"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
@@ -97,7 +97,7 @@
             android:layout_weight="1" />
 
         <ImageButton
-            android:id="@+id/MyMentorsButton"
+            android:id="@+id/ProfileMyMentorsButton"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
@@ -108,7 +108,7 @@
             android:layout_weight="1" />
 
         <ImageButton
-            android:id="@+id/MyPostButton"
+            android:id="@+id/ProfileMyPostButton"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
@@ -117,6 +117,16 @@
             android:src="@drawable/baseline_text_snippet_24"
             android:contentDescription="My Post"
             android:layout_weight="1"/>
+        <ImageButton
+            android:id="@+id/ProfileSearchBar"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="Search"
+            android:src="@drawable/search"
+            android:layout_weight="1" />
 
         <ImageButton
             android:id="@+id/LogOutButton"
@@ -128,6 +138,20 @@
             android:contentDescription="Log Out Icon"
             android:src="@drawable/baseline_logout_24"
             android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/ProfileProfilePictureButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/circle_shape"
+            android:contentDescription="Profile"
+            android:scaleType="centerCrop"
+            android:padding="15dp"
+            android:src="@drawable/profilephoto" />
+
+
     </LinearLayout>
 
 </LinearLayout>
