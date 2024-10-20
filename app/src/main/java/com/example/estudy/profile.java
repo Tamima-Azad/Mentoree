@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.util.concurrent.ForwardingListeningExecutorService;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,6 +43,7 @@ public class profile extends AppCompatActivity {
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
     private ImageButton myPostButton, homeButton;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,10 +99,13 @@ public class profile extends AppCompatActivity {
             isProfilePicture = true;
             openImagePicker();
         });
+        mAuth = FirebaseAuth.getInstance();
         logout.setOnClickListener(v -> {
+            mAuth.signOut();
             Intent intent1 = new Intent(profile.this, LoginActivity.class);
             startActivity(intent1);
             finish();
+            Toast.makeText(profile.this, "LogOut Successfully", Toast.LENGTH_SHORT).show();
         });
         coverPhoto.setOnClickListener(v -> {
             isProfilePicture = false;

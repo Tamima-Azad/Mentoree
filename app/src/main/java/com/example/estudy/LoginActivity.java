@@ -177,7 +177,10 @@ public class LoginActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle("Exit App")
                 .setMessage("Are you sure you want to exit?")
-                .setPositiveButton("Yes", (dialog, which) -> finish())
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    finishAffinity();
+                    System.exit(0);
+                })
                 .setNegativeButton("No", null)
                 .show();
     }

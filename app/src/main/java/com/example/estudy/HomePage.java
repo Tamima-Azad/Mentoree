@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.util.concurrent.ForwardingListeningExecutorService;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +35,7 @@ public class HomePage extends AppCompatActivity {
     private FirebaseStorage storage;
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
+    private FirebaseAuth mAuth;
 
 
 
@@ -128,13 +130,16 @@ public class HomePage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        mAuth = FirebaseAuth.getInstance();
         ImageButton HomeLogOutButton = findViewById(R.id.HomeLogOutButton);
         HomeLogOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mAuth.signOut();
                 Intent intent = new Intent(HomePage.this, LoginActivity.class);
                 startActivity(intent);
+                finish();
+                Toast.makeText(HomePage.this, "LogOut Successfully", Toast.LENGTH_SHORT).show();
             }
         });
 
