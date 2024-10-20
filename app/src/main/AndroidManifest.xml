@@ -30,6 +30,10 @@
         <activity
             android:name=".HomePage"
             android:exported="false" />
+
+        <activity
+            android:name=".PostPage"
+            android:exported="false"/>
         <activity
             android:name=".forgot_pass"
             android:exported="false" />
