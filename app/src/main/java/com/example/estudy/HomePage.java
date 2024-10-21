@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,13 +30,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class HomePage extends AppCompatActivity {
     private FirebaseStorage storage;
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
-
+    ArrayList<HomePageItemModel> list=new ArrayList<>();
 
 
     @Override
@@ -47,27 +50,44 @@ public class HomePage extends AppCompatActivity {
         Intent intent = getIntent();
         String userEmail = intent.getStringExtra("USER_EMAIL");
         String encodedEmail = encodeEmail(userEmail);
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference(encodeEmail(userEmail)).child(encodedEmail);
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference(encodeEmail(userEmail));
+
+
+
+        ///recycler
+        RecyclerView allList=findViewById(R.id.HomeRecyclerList);
+        allList.setLayoutManager(new LinearLayoutManager(this));
+
+        list.add(new HomePageItemModel("Tamima Azad", R.drawable.defaultpic, "Enjoying the sunshine!", R.drawable.defaultpic));
+        list.add(new HomePageItemModel("B", R.drawable.ic_launcher_background, "Learning Android development!", R.drawable.ic_launcher_foreground));
+        list.add(new HomePageItemModel("C", R.drawable.defaultpic, "Just finished a great workout.", R.drawable.ic_launcher_foreground));
+        list.add(new HomePageItemModel("D", R.drawable.defaultpic, "Happy Monday everyone!", R.drawable.ic_launcher_foreground));
+        list.add(new HomePageItemModel("D", R.drawable.defaultpic, "Happy Birthday !", R.drawable.ic_launcher_foreground));
+        list.add(new HomePageItemModel("D", R.drawable.defaultpic, "Hellow everyone!", R.drawable.ic_launcher_foreground));
+        list.add(new HomePageItemModel("D", R.drawable.defaultpic, "Welcome!", R.drawable.ic_launcher_foreground));
+
+        HomeItemRecyclerAdapter adapter=new HomeItemRecyclerAdapter(this,list);
+        allList.setAdapter(adapter);
 
 
         profilePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent profileIntent = new Intent(HomePage.this, profile.class);
-                profileIntent.putExtra("USER_EMAIL2", userEmail); // Pass user email to profile
+                profileIntent.putExtra("USER_EMAIL", userEmail); // Pass user email to profile
                 startActivity(profileIntent);
             }
         });
         // Initialize Firebase Storage
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-        databaseReference = FirebaseDatabase.getInstance().getReference(encodedEmail).child(encodedEmail);
+        databaseReference = FirebaseDatabase.getInstance().getReference(encodedEmail);
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ImageLoader imageLoader = new ImageLoader();
-                String profilePicUrl = dataSnapshot.child("profilePictureUrl").getValue(String.class);
+                String profilePicUrl = dataSnapshot.child("RegistrationPageInformation").child("profilePictureUrl").getValue(String.class);
                 ImageView profileImageView = findViewById(R.id.HomeProfilePictureButton);
                 imageLoader.loadImageIntoImageView(profilePicUrl, profileImageView, 100, 120, R.drawable.defaultpic);
                 if (profilePicUrl != null) {
@@ -88,6 +108,7 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HomePage.this, Notification.class);
+                intent.putExtra("USER_EMAIL", userEmail);
                 startActivity(intent);
             }
         });
@@ -107,6 +128,7 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HomePage.this, MentorList.class);
+                intent.putExtra("USER_EMAIL", userEmail);
                 startActivity(intent);
             }
         });
@@ -116,6 +138,7 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HomePage.this, PostPage.class);
+                intent.putExtra("USER_EMAIL", userEmail);
                 startActivity(intent);
             }
         });
@@ -125,6 +148,7 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HomePage.this, SearchPage.class);
+                intent.putExtra("USER_EMAIL", userEmail);
                 startActivity(intent);
             }
         });
@@ -135,6 +159,7 @@ public class HomePage extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(HomePage.this, LoginActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
