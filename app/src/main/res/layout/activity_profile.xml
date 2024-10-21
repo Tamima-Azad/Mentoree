@@ -64,15 +64,32 @@
                 </FrameLayout>
             </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/profileName"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:gravity="center"
                 android:layout_gravity="center"
-                android:layout_marginTop="6dp"
-                android:textColor="@color/black"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+                android:layout_marginTop="6dp">
+
+                <TextView
+                    android:id="@+id/profileName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center" />
+
+                <ImageButton
+                    android:id="@+id/followButton"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="0dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:src="@drawable/baseline_star_border_24"
+                    android:contentDescription="Follow" />
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/EditContactNo"
