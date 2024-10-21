@@ -1,13 +1,16 @@
 package com.example.estudy;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,10 +19,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.common.util.concurrent.ForwardingListeningExecutorService;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,7 +32,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
+import android.os.Bundle;
 
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class profile extends AppCompatActivity {
@@ -42,36 +50,47 @@ public class profile extends AppCompatActivity {
     private FirebaseStorage storage;
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
-    private ImageButton myPostButton, homeButton;
-    private FirebaseAuth mAuth;
+    private ImageButton myPostButton, homeButton, ProfileProfilePictureButton,Save, ProfileMyMentorsButton, ProfileSearchBar;
+    private EditText EditContactNo, EditEducation, EditCurrentWorkplace, EditSocialLinks, EditHomeTown, EditCurrentCity, EditSkills, EditAboutMe;
+    private boolean information = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        // Initialize views
+
         profilePicture = findViewById(R.id.profilePicture);
         coverPhoto = findViewById(R.id.coverPhoto);
         pName = findViewById(R.id.profileName);
         logout = findViewById(R.id.LogOutButton);
-        // Initialize Firebase Storage
+        EditContactNo = findViewById(R.id.EditContactNo);
+        EditEducation = findViewById(R.id.EditEducation);
+        EditCurrentWorkplace = findViewById(R.id.EditCurrentWorkplace);
+        EditSocialLinks = findViewById(R.id.EditSocialLinks);
+        EditHomeTown = findViewById(R.id.EditHomeTown);
+        EditCurrentCity = findViewById(R.id.EditCurrentCity);
+        EditSkills = findViewById(R.id.EditSkills);
+        EditAboutMe = findViewById(R.id.EditAboutMe);
+        ProfileProfilePictureButton = findViewById(R.id.ProfileProfilePictureButton);
+        ProfileMyMentorsButton = findViewById(R.id.ProfileMyMentorsButton);
+        ProfileSearchBar = findViewById(R.id.ProfileSearchBar);
+
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
         // Get user email from intent and encode it
         Intent intent = getIntent();
-        String userEmail = intent.getStringExtra("USER_EMAIL2");
-        intent.putExtra("USER_EMAIL4", userEmail);
+        String userEmail = intent.getStringExtra("USER_EMAIL");
         String encodedEmail = encodeEmail(userEmail);
-        databaseReference = FirebaseDatabase.getInstance().getReference(encodedEmail).child(encodedEmail);
+        databaseReference = FirebaseDatabase.getInstance().getReference(encodedEmail);
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ImageLoader imageLoader = new ImageLoader();
-                String profilePicUrl = dataSnapshot.child("profilePictureUrl").getValue(String.class);
-                String coverPicUrl = dataSnapshot.child("coverPhotoUrl").getValue(String.class);
+                String profilePicUrl = dataSnapshot.child("RegistrationPageInformation").child("profilePictureUrl").getValue(String.class);
+                String coverPicUrl = dataSnapshot.child("RegistrationPageInformation").child("coverPhotoUrl").getValue(String.class);
                 ImageView profileImageView = findViewById(R.id.profilePicture);
                 imageLoader.loadImageIntoImageView(profilePicUrl, profileImageView, 180, 180, R.drawable.defaultpic);
                 ImageView coverImageView = findViewById(R.id.coverPhoto);
@@ -93,19 +112,31 @@ public class profile extends AppCompatActivity {
             }
         });
 
-
-        // Set click listeners for profile picture and cover photo
+        enableEditOnIconTouch(EditContactNo, EditEducation, EditCurrentWorkplace, EditSocialLinks, EditHomeTown, EditCurrentCity, EditSkills, EditAboutMe);
+        informationSave(userEmail);
+        ProfileProfilePictureButton.setOnClickListener(v -> {
+            Intent intent1 = new Intent(profile.this, profile.class);
+            intent1.putExtra("USER_EMAIL", userEmail);
+            startActivity(intent1);
+        });
+        ProfileMyMentorsButton.setOnClickListener(v->{
+            Intent intent1 = new Intent(profile.this, MentorList.class);
+            intent1.putExtra("USER_EMAIL", userEmail);
+            startActivity(intent1);
+        });
+        ProfileSearchBar.setOnClickListener(v->{
+            Intent intent1 = new Intent(profile.this, SearchPage.class);
+            intent1.putExtra("USER_EMAIL", userEmail);
+            startActivity(intent1);
+        });
         profilePicture.setOnClickListener(v -> {
             isProfilePicture = true;
             openImagePicker();
         });
-        mAuth = FirebaseAuth.getInstance();
         logout.setOnClickListener(v -> {
-            mAuth.signOut();
             Intent intent1 = new Intent(profile.this, LoginActivity.class);
             startActivity(intent1);
             finish();
-            Toast.makeText(profile.this, "LogOut Successfully", Toast.LENGTH_SHORT).show();
         });
         coverPhoto.setOnClickListener(v -> {
             isProfilePicture = false;
@@ -113,7 +144,7 @@ public class profile extends AppCompatActivity {
         });
 
         // Call to retrieve user info
-        retrieveUserInfo();
+        retrieveUserInfo(userEmail);
         myPostButton = findViewById(R.id.ProfileMyPostButton);
         myPostButton.setOnClickListener(v -> {
             Intent intent2 = new Intent(profile.this, PostPage.class);
@@ -125,10 +156,40 @@ public class profile extends AppCompatActivity {
             Intent intent1 = new Intent(profile.this, HomePage.class);
             intent1.putExtra("USER_EMAIL", userEmail);
             startActivity(intent1);
-            finish();
         });
 
     }
+    private void setupEditTextWithIcon(final EditText editText) {
+        editText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Check if the touch event is ACTION_DOWN (when the screen is touched)
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    // Check if the touch is within the bounds of the right drawable
+                    if (event.getRawX() >= (editText.getRight() - editText.getCompoundDrawables()[2].getBounds().width())) {
+                        // Enable editing for the EditText
+                        enableEditing(editText);
+                        return true; // Return true to indicate that the event was handled
+                    }
+                }
+                return false;
+            }
+        });
+    }
+    // Enable the EditText to be editable
+    private void enableEditing(EditText editText) {
+        editText.setFocusable(true);
+        editText.setFocusableInTouchMode(true);
+        editText.setClickable(true);
+        editText.requestFocus();
+        editText.setSelection(editText.getText().length());
+    }
+    private void enableEditOnIconTouch(EditText... editTexts) {
+        for (EditText editText : editTexts) {
+            setupEditTextWithIcon(editText);
+        }
+    }
+
 
     private void openImagePicker() {
         Intent intent = new Intent();
@@ -160,17 +221,82 @@ public class profile extends AppCompatActivity {
             }
         }
     }
-    private void retrieveUserInfo() {
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//    private void retrieveUserInfo2(String userEmail) {
+//        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference((userEmail));
+//
+//        myRef.child("Information").addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.exists()) {
+//                    String contactNo = dataSnapshot.child("contact").getValue(String.class);
+//                    String education = dataSnapshot.child("edu").getValue(String.class);
+//                    String currentWorkplace = dataSnapshot.child("workPlace").getValue(String.class);
+//                    String socialLinks = dataSnapshot.child("social_links").getValue(String.class);
+//                    String homeTown = dataSnapshot.child("homeTown").getValue(String.class);
+//                    String currentCity = dataSnapshot.child("current_city").getValue(String.class);
+//                    String skills = dataSnapshot.child("skills").getValue(String.class);
+//                    String aboutMe = dataSnapshot.child("about_me").getValue(String.class);
+//
+//                    // Set the retrieved values to EditText fields if not null
+//                    if (contactNo != null) EditContactNo.setText(contactNo);
+//                    if (education != null) EditEducation.setText(education);
+//                    if (currentWorkplace != null) EditCurrentWorkplace.setText(currentWorkplace);
+//                    if (socialLinks != null) EditSocialLinks.setText(socialLinks);
+//                    if (homeTown != null) EditHomeTown.setText(homeTown);
+//                    if (currentCity != null) EditCurrentCity.setText(currentCity);
+//                    if (skills != null) EditSkills.setText(skills);
+//                    if (aboutMe != null) EditAboutMe.setText(aboutMe);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                Toast.makeText(profile.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+
+    private void retrieveUserInfo(String userEmail) {
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(encodeEmail(userEmail));
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    String name = dataSnapshot.child("name").getValue(String.class).toString().trim(); // Retrieve name
-                    if (name != null) {
-                        pName.setText(name); // Set the name in the TextView
+                    // Load Registration Information
+                    String name = dataSnapshot.child("RegistrationPageInformation").child("name").getValue(String.class);
+                    if (name != null) pName.setText(name);
+                    if(information) {
+                        // Load Contact Information
+                        String contactNo = dataSnapshot.child("Information").child("contact").getValue(String.class);
+                        if (contactNo != null) EditContactNo.setText(contactNo);
+
+                        // Load other fields in a similar manner
+                        String education = dataSnapshot.child("Information").child("edu").getValue(String.class);
+                        if (education != null) EditEducation.setText(education);
+
+                        String currentWorkplace = dataSnapshot.child("Information").child("workPlace").getValue(String.class);
+                        if (currentWorkplace != null)
+                            EditCurrentWorkplace.setText(currentWorkplace);
+
+                        String socialLinks = dataSnapshot.child("Information").child("social_links").getValue(String.class);
+                        if (socialLinks != null) EditSocialLinks.setText(socialLinks);
+
+                        String homeTown = dataSnapshot.child("Information").child("homeTown").getValue(String.class);
+                        if (homeTown != null) EditHomeTown.setText(homeTown);
+
+                        String currentCity = dataSnapshot.child("Information").child("current_city").getValue(String.class);
+                        if (currentCity != null) EditCurrentCity.setText(currentCity);
+
+                        String skills = dataSnapshot.child("Information").child("skills").getValue(String.class);
+                        if (skills != null) EditSkills.setText(skills);
+
+                        String aboutMe = dataSnapshot.child("Information").child("about_me").getValue(String.class);
+                        if (aboutMe != null) EditAboutMe.setText(aboutMe);
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(profile.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
@@ -198,9 +324,9 @@ public class profile extends AppCompatActivity {
 
     private void saveImageUrlToDatabase(String imageType, String downloadUrl) {
         if (imageType.equals("profilePicture")) {
-            databaseReference.child("profilePictureUrl").setValue(downloadUrl);
+            databaseReference.child("RegistrationPageInformation").child("profilePictureUrl").setValue(downloadUrl);
         } else if (imageType.equals("coverPhoto")) {
-            databaseReference.child("coverPhotoUrl").setValue(downloadUrl);
+            databaseReference.child("RegistrationPageInformation").child("coverPhotoUrl").setValue(downloadUrl);
         }
 
         Toast.makeText(this, "Image URL saved successfully", Toast.LENGTH_SHORT).show();
@@ -209,4 +335,48 @@ public class profile extends AppCompatActivity {
     private String encodeEmail(String email) {
         return email.replace(".", ",");
     }
+    private void informationSave(String userEmail) {
+        // Initialize Firebase database reference
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference(encodeEmail(userEmail));
+
+        // Ensure that the 'Save' button is correctly initialized
+        ImageButton saveButton = findViewById(R.id.ProfileSaveButton); // replace with correct button ID from your XML layout.
+
+        // Set the onClickListener for the 'Save' button
+        saveButton.setOnClickListener(v -> {
+            // Get updated input data from EditText fields
+            String contactNo = EditContactNo.getText().toString().trim();
+            String education = EditEducation.getText().toString().trim();
+            String currentWorkplace = EditCurrentWorkplace.getText().toString().trim();
+            String socialLinks = EditSocialLinks.getText().toString().trim();
+            String homeTown = EditHomeTown.getText().toString().trim();
+            String currentCity = EditCurrentCity.getText().toString().trim();
+            String skills = EditSkills.getText().toString().trim();
+            String aboutMe = EditAboutMe.getText().toString().trim();
+
+            // Create a user object with the provided information
+            user2 usr = new user2(contactNo, education, currentWorkplace, socialLinks, homeTown, currentCity, skills, aboutMe);
+
+            // Save the user information to Firebase under the correct path
+            myRef.child("Information").setValue(usr).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(profile.this, "User information saved successfully", Toast.LENGTH_SHORT).show();
+                        information = true;
+                        Intent intent = new Intent(profile.this, profile.class);
+                        intent.putExtra("USER_EMAIL", userEmail);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    } else {
+                        // If there is an error saving data, show the error message
+                        Toast.makeText(profile.this, "Failed to save user information: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        });
+    }
+
+
 }

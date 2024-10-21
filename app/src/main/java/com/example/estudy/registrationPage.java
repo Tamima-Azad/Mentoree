@@ -115,29 +115,29 @@ public class registrationPage extends AppCompatActivity implements View.OnClickL
             RegisterPasswordEditText.requestFocus();
             return;
         }
-//        else {
-//            boolean boro = false, Chuto = false, digit = false, special = false;
-//            //Toast.makeText(registrationPage.this, password, Toast.LENGTH_LONG).show();
-//            for(int i = 0; i < password.length(); i++){
-//                if(password.charAt(i) >= 'A' && password.charAt(i) <= 'Z'){
-//                    boro = true;
-//                }
-//                if(password.charAt(i) >= 'a' && password.charAt(i) <= 'z'){
-//                    Chuto = true;
-//                }
-//                if(password.charAt(i) >= '0' && password.charAt(i) <= '9'){
-//                    digit = true;
-//                }
-//                if(password.charAt(i) == '@' || password.charAt(i) == '#' || password.charAt(i) == '$' || password.charAt(i) == '%' || password.charAt(i) == '^' || password.charAt(i) == '&') {
-//                    special = true;
-//                }
-//            }
-//            if(boro==false || Chuto==false || digit==false || special==false){
-//                RegisterPasswordEditText.setError("Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character");
-//                RegisterPasswordEditText.requestFocus();
-//                return;
-//            }
-//        }
+        else {
+            boolean boro = false, Chuto = false, digit = false, special = false;
+            //Toast.makeText(registrationPage.this, password, Toast.LENGTH_LONG).show();
+            for(int i = 0; i < password.length(); i++){
+                if(password.charAt(i) >= 'A' && password.charAt(i) <= 'Z'){
+                    boro = true;
+                }
+                if(password.charAt(i) >= 'a' && password.charAt(i) <= 'z'){
+                    Chuto = true;
+                }
+                if(password.charAt(i) >= '0' && password.charAt(i) <= '9'){
+                    digit = true;
+                }
+                if(password.charAt(i) == '@' || password.charAt(i) == '#' || password.charAt(i) == '$' || password.charAt(i) == '%' || password.charAt(i) == '^' || password.charAt(i) == '&') {
+                    special = true;
+                }
+            }
+            if(boro==false || Chuto==false || digit==false || special==false){
+                RegisterPasswordEditText.setError("Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character");
+                RegisterPasswordEditText.requestFocus();
+                return;
+            }
+        }
 
         progressBar.setVisibility(View.VISIBLE); // Show progress bar
 
