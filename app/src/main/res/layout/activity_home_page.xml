@@ -35,18 +35,13 @@
             android:adjustViewBounds="true" />
     </RelativeLayout>
 
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/HomeRecyclerList"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <!-- Add your content here -->
-        </LinearLayout>
-    </ScrollView>
+        android:layout_marginTop="55dp"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/cardview_default_radius"
+        tools:layout_editor_absoluteX="5dp" />
 
     <LinearLayout
         android:id="@+id/menuBar"

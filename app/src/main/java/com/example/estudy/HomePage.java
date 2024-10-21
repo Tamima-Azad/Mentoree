@@ -130,6 +130,18 @@ public class HomePage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        mAuth = FirebaseAuth.getInstance();
+        ImageButton HomeLogOutButton = findViewById(R.id.HomeLogOutButton);
+        HomeLogOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.signOut();
+                Intent intent = new Intent(HomePage.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+                Toast.makeText(HomePage.this, "LogOut Successfully", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
     private String encodeEmail(String email) {

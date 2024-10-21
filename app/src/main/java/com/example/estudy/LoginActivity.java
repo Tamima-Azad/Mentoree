@@ -120,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
         String userUserName = userEditText.getText().toString().trim();
         String userPassword = passwordEditText.getText().toString().trim();
         String encodedUserName = encodeEmail(userUserName);
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference(encodeEmail(userUserName)).child(encodedUserName);
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference(encodeEmail(userUserName)).child("RegistrationPageInformation");
         progressBar.setVisibility(View.VISIBLE);
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

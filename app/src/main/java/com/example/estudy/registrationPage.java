@@ -161,10 +161,10 @@ public class registrationPage extends AppCompatActivity implements View.OnClickL
     }
     private void saveUserInfo(String email, String password, String name, String phone, String profilePictureUrl, String coverPhotoUrl) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference(encodeEmail(email)); // Store under the "users" node
+        DatabaseReference myRef = database.getReference(encodeEmail(email));
 
         user usr = new user(name, password, phone, email, profilePictureUrl, coverPhotoUrl);
-        myRef.child(encodeEmail(email)).setValue(usr).addOnCompleteListener(new OnCompleteListener<Void>() {
+        myRef.child("RegistrationPageInformation").setValue(usr).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 progressBar.setVisibility(View.GONE); // Hide progress bar after save attempt

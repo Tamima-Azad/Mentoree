@@ -1,6 +1,5 @@
 package com.example.estudy;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -102,7 +101,6 @@ public class profile extends AppCompatActivity {
         });
         mAuth = FirebaseAuth.getInstance();
         logout.setOnClickListener(v -> {
-            //showLogoutConfirmationDialog();
             mAuth.signOut();
             Intent intent1 = new Intent(profile.this, LoginActivity.class);
             startActivity(intent1);
@@ -210,20 +208,5 @@ public class profile extends AppCompatActivity {
 
     private String encodeEmail(String email) {
         return email.replace(".", ",");
-    }
-
-    private void showLogoutConfirmationDialog(){
-        new AlertDialog.Builder(this)
-                .setTitle("Logout")
-                .setMessage("Are you sure you want to logout?")
-                .setPositiveButton("Yes", (dialog, which) -> {
-                    mAuth.signOut();
-                    Intent intent = new Intent(profile.this, LoginActivity.class);
-                    startActivity(intent);
-                    finish();
-                    Toast.makeText(profile.this, "Logged out successfully", Toast.LENGTH_SHORT).show();
-                })
-                .setNegativeButton("No", null)
-                .show();
     }
 }
