@@ -18,11 +18,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.checkerframework.checker.units.qual.N;
 
 import java.time.LocalTime;
 import java.util.Objects;
@@ -121,19 +125,23 @@ public class LoginActivity extends AppCompatActivity {
         String userPassword = passwordEditText.getText().toString().trim();
         String encodedUserName = encodeEmail(userUserName);
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference(encodeEmail(userUserName)).child("RegistrationPageInformation");
+        DatabaseReference usersData = FirebaseDatabase.getInstance().getReference("All");
+
         progressBar.setVisibility(View.VISIBLE);
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 progressBar.setVisibility(View.GONE); // Hide progress bar
                 if (snapshot.exists()) {
-                    // Fetch the password from the database
+                    String Name = snapshot.child("name").getValue(String.class);
+                    usersData.child(Name).child(encodedUserName).child("Name").setValue(Name);
+                    usersData.child(Name).child(encodedUserName).child("Email").setValue(userUserName);
                     String passwordFromDB = snapshot.child("password").getValue(String.class);
                     if (Objects.equals(passwordFromDB, userPassword)) {
                         // Password is correct, proceed to profile activity
                         Intent intent = new Intent(LoginActivity.this, HomePage.class);
                         intent.putExtra("USER_EMAIL", userUserName);
-                        intent.putExtra("USER_EMAIL3", userUserName);
+                        Toast.makeText(LoginActivity.this, Name, Toast.LENGTH_LONG).show();
                         startActivity(intent);
                     } else {
                         Toast.makeText(LoginActivity.this, "Incorrect password", Toast.LENGTH_SHORT).show();

@@ -7,11 +7,11 @@
     android:padding="16dp">
 
     <EditText
-        android:id="@+id/search_email"
+        android:id="@+id/search_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter email to search"
-        android:inputType="textEmailAddress"/>
+        android:hint="Enter name to search"
+        android:inputType="textPersonName"/>
 
     <Button
         android:id="@+id/search_button"
@@ -28,6 +28,6 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 </LinearLayout>
