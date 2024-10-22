@@ -53,6 +53,7 @@ public class profile extends AppCompatActivity {
     private ImageButton myPostButton, homeButton, ProfileProfilePictureButton,Save, ProfileMyMentorsButton, ProfileSearchBar;
     private EditText EditContactNo, EditEducation, EditCurrentWorkplace, EditSocialLinks, EditHomeTown, EditCurrentCity, EditSkills, EditAboutMe;
     private boolean information = false;
+    String contactNon, education, currentWorkplace, socialLinks, homeTown, currentCity, skills, aboutMe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +80,16 @@ public class profile extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
+
         // Get user email from intent and encode it
         Intent intent = getIntent();
         String userEmail = intent.getStringExtra("USER_EMAIL");
         String encodedEmail = encodeEmail(userEmail);
         databaseReference = FirebaseDatabase.getInstance().getReference(encodedEmail);
+        enableEditOnIconTouch(EditContactNo, EditEducation, EditCurrentWorkplace, EditSocialLinks, EditHomeTown, EditCurrentCity, EditSkills, EditAboutMe);
+        informationSave(userEmail);
+        retrieveUserInfo(userEmail);
+        //DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(encodedEmail);
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -112,9 +118,9 @@ public class profile extends AppCompatActivity {
             }
         });
 
-        enableEditOnIconTouch(EditContactNo, EditEducation, EditCurrentWorkplace, EditSocialLinks, EditHomeTown, EditCurrentCity, EditSkills, EditAboutMe);
-        informationSave(userEmail);
+
         ProfileProfilePictureButton.setOnClickListener(v -> {
+            //Toast.makeText(profile.this,contactNon,Toast.LENGTH_LONG).show();
             Intent intent1 = new Intent(profile.this, profile.class);
             intent1.putExtra("USER_EMAIL", userEmail);
             startActivity(intent1);
@@ -142,9 +148,6 @@ public class profile extends AppCompatActivity {
             isProfilePicture = false;
             openImagePicker();
         });
-
-        // Call to retrieve user info
-        retrieveUserInfo(userEmail);
         myPostButton = findViewById(R.id.ProfileMyPostButton);
         myPostButton.setOnClickListener(v -> {
             Intent intent2 = new Intent(profile.this, PostPage.class);
@@ -157,6 +160,7 @@ public class profile extends AppCompatActivity {
             intent1.putExtra("USER_EMAIL", userEmail);
             startActivity(intent1);
         });
+        retrieveUserInfo2(userEmail);
 
     }
     private void setupEditTextWithIcon(final EditText editText) {
@@ -221,45 +225,43 @@ public class profile extends AppCompatActivity {
             }
         }
     }
-//    private void retrieveUserInfo2(String userEmail) {
-//        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference((userEmail));
-//
-//        myRef.child("Information").addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.exists()) {
-//                    String contactNo = dataSnapshot.child("contact").getValue(String.class);
-//                    String education = dataSnapshot.child("edu").getValue(String.class);
-//                    String currentWorkplace = dataSnapshot.child("workPlace").getValue(String.class);
-//                    String socialLinks = dataSnapshot.child("social_links").getValue(String.class);
-//                    String homeTown = dataSnapshot.child("homeTown").getValue(String.class);
-//                    String currentCity = dataSnapshot.child("current_city").getValue(String.class);
-//                    String skills = dataSnapshot.child("skills").getValue(String.class);
-//                    String aboutMe = dataSnapshot.child("about_me").getValue(String.class);
-//
-//                    // Set the retrieved values to EditText fields if not null
-//                    if (contactNo != null) EditContactNo.setText(contactNo);
-//                    if (education != null) EditEducation.setText(education);
-//                    if (currentWorkplace != null) EditCurrentWorkplace.setText(currentWorkplace);
-//                    if (socialLinks != null) EditSocialLinks.setText(socialLinks);
-//                    if (homeTown != null) EditHomeTown.setText(homeTown);
-//                    if (currentCity != null) EditCurrentCity.setText(currentCity);
-//                    if (skills != null) EditSkills.setText(skills);
-//                    if (aboutMe != null) EditAboutMe.setText(aboutMe);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                Toast.makeText(profile.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-
-    private void retrieveUserInfo(String userEmail) {
+    private void retrieveUserInfo2(String userEmail) {
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(encodeEmail(userEmail));
 
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.child("Information").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String contactNo = dataSnapshot.child("contact").getValue(String.class);
+                    String education = dataSnapshot.child("edu").getValue(String.class);
+                    String currentWorkplace = dataSnapshot.child("workPlace").getValue(String.class);
+                    String socialLinks = dataSnapshot.child("social_links").getValue(String.class);
+                    String homeTown = dataSnapshot.child("homeTown").getValue(String.class);
+                    String currentCity = dataSnapshot.child("current_city").getValue(String.class);
+                    String skills = dataSnapshot.child("skills").getValue(String.class);
+                    String aboutMe = dataSnapshot.child("about_me").getValue(String.class);
+
+                    // Set the retrieved values to EditText fields if not null
+                    if (contactNo != null) EditContactNo.setText(contactNo);
+                    if (education != null) EditEducation.setText(education);
+                    if (currentWorkplace != null) EditCurrentWorkplace.setText(currentWorkplace);
+                    if (socialLinks != null) EditSocialLinks.setText(socialLinks);
+                    if (homeTown != null) EditHomeTown.setText(homeTown);
+                    if (currentCity != null) EditCurrentCity.setText(currentCity);
+                    if (skills != null) EditSkills.setText(skills);
+                    if (aboutMe != null) EditAboutMe.setText(aboutMe);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(profile.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void retrieveUserInfo(String userEmail) {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -268,30 +270,30 @@ public class profile extends AppCompatActivity {
                     if (name != null) pName.setText(name);
                     if(information) {
                         // Load Contact Information
-                        String contactNo = dataSnapshot.child("Information").child("contact").getValue(String.class);
-                        if (contactNo != null) EditContactNo.setText(contactNo);
+                        contactNon = dataSnapshot.child("Information").child("contact").getValue(String.class);
+                        if (!contactNon.isEmpty()) EditContactNo.setText(contactNon);
 
                         // Load other fields in a similar manner
-                        String education = dataSnapshot.child("Information").child("edu").getValue(String.class);
+                        education = dataSnapshot.child("Information").child("edu").getValue(String.class);
                         if (education != null) EditEducation.setText(education);
 
-                        String currentWorkplace = dataSnapshot.child("Information").child("workPlace").getValue(String.class);
+                        currentWorkplace = dataSnapshot.child("Information").child("workPlace").getValue(String.class);
                         if (currentWorkplace != null)
                             EditCurrentWorkplace.setText(currentWorkplace);
 
-                        String socialLinks = dataSnapshot.child("Information").child("social_links").getValue(String.class);
+                        socialLinks = dataSnapshot.child("Information").child("social_links").getValue(String.class);
                         if (socialLinks != null) EditSocialLinks.setText(socialLinks);
 
-                        String homeTown = dataSnapshot.child("Information").child("homeTown").getValue(String.class);
+                        homeTown = dataSnapshot.child("Information").child("homeTown").getValue(String.class);
                         if (homeTown != null) EditHomeTown.setText(homeTown);
 
-                        String currentCity = dataSnapshot.child("Information").child("current_city").getValue(String.class);
+                        currentCity = dataSnapshot.child("Information").child("current_city").getValue(String.class);
                         if (currentCity != null) EditCurrentCity.setText(currentCity);
 
-                        String skills = dataSnapshot.child("Information").child("skills").getValue(String.class);
+                        skills = dataSnapshot.child("Information").child("skills").getValue(String.class);
                         if (skills != null) EditSkills.setText(skills);
 
-                        String aboutMe = dataSnapshot.child("Information").child("about_me").getValue(String.class);
+                        aboutMe = dataSnapshot.child("Information").child("about_me").getValue(String.class);
                         if (aboutMe != null) EditAboutMe.setText(aboutMe);
                     }
                 }
@@ -325,11 +327,12 @@ public class profile extends AppCompatActivity {
     private void saveImageUrlToDatabase(String imageType, String downloadUrl) {
         if (imageType.equals("profilePicture")) {
             databaseReference.child("RegistrationPageInformation").child("profilePictureUrl").setValue(downloadUrl);
+            Toast.makeText(this, "Profile Picture saved successfully", Toast.LENGTH_SHORT).show();
         } else if (imageType.equals("coverPhoto")) {
             databaseReference.child("RegistrationPageInformation").child("coverPhotoUrl").setValue(downloadUrl);
+            Toast.makeText(this, "Cover Picture saved successfully", Toast.LENGTH_SHORT).show();
         }
 
-        Toast.makeText(this, "Image URL saved successfully", Toast.LENGTH_SHORT).show();
     }
 
     private String encodeEmail(String email) {
@@ -377,6 +380,4 @@ public class profile extends AppCompatActivity {
             });
         });
     }
-
-
 }
