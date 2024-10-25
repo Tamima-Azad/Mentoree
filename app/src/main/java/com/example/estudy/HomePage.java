@@ -73,8 +73,8 @@ public class HomePage extends AppCompatActivity {
         profilePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(HomePage.this,"Profile",Toast.LENGTH_SHORT).show();
-                Intent profileIntent = new Intent(HomePage.this, profile.class);
+                Toast.makeText(HomePage.this,"Profile",Toast.LENGTH_SHORT).show();
+                Intent profileIntent = new Intent(HomePage.this, OwnProfile.class);
                 profileIntent.putExtra("USER_EMAIL", userEmail); // Pass user email to profile
                 startActivity(profileIntent);
             }
@@ -82,13 +82,13 @@ public class HomePage extends AppCompatActivity {
         // Initialize Firebase Storage
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-        databaseReference = FirebaseDatabase.getInstance().getReference(encodedEmail);
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ImageLoader imageLoader = new ImageLoader();
-                String profilePicUrl = dataSnapshot.child("RegistrationPageInformation").child("profilePictureUrl").getValue(String.class);
+                String profilePicUrl = dataSnapshot.child(encodedEmail).child("RegistrationPageInformation").child("profilePictureUrl").getValue(String.class);
                 ImageView profileImageView = findViewById(R.id.HomeProfilePictureButton);
                 imageLoader.loadImageIntoImageView(profilePicUrl, profileImageView, 100, 120, R.drawable.defaultpic);
                 if (profilePicUrl != null) {

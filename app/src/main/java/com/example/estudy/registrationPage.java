@@ -115,30 +115,30 @@ public class registrationPage extends AppCompatActivity implements View.OnClickL
             RegisterPasswordEditText.requestFocus();
             return;
         }
-        else {
-            boolean boro = false, Chuto = false, digit = false, special = false;
-            //Toast.makeText(registrationPage.this, password, Toast.LENGTH_LONG).show();
-            for(int i = 0; i < password.length(); i++){
-                if(password.charAt(i) >= 'A' && password.charAt(i) <= 'Z'){
-                    boro = true;
-                }
-                if(password.charAt(i) >= 'a' && password.charAt(i) <= 'z'){
-                    Chuto = true;
-                }
-                if(password.charAt(i) >= '0' && password.charAt(i) <= '9'){
-                    digit = true;
-                }
-                if(password.charAt(i) == '@' || password.charAt(i) == '#' || password.charAt(i) == '$' || password.charAt(i) == '%' || password.charAt(i) == '^' || password.charAt(i) == '&') {
-                    special = true;
-                }
-            }
-            if(boro==false || Chuto==false || digit==false || special==false){
-                RegisterPasswordEditText.setError("Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character");
-                RegisterPasswordEditText.requestFocus();
-                return;
-            }
-        }
-
+//        else {
+//            boolean boro = false, Chuto = false, digit = false, special = false;
+//            //Toast.makeText(registrationPage.this, password, Toast.LENGTH_LONG).show();
+//            for(int i = 0; i < password.length(); i++){
+//                if(password.charAt(i) >= 'A' && password.charAt(i) <= 'Z'){
+//                    boro = true;
+//                }
+//                if(password.charAt(i) >= 'a' && password.charAt(i) <= 'z'){
+//                    Chuto = true;
+//                }
+//                if(password.charAt(i) >= '0' && password.charAt(i) <= '9'){
+//                    digit = true;
+//                }
+//                if(password.charAt(i) == '@' || password.charAt(i) == '#' || password.charAt(i) == '$' || password.charAt(i) == '%' || password.charAt(i) == '^' || password.charAt(i) == '&') {
+//                    special = true;
+//                }
+//            }
+//            if(boro==false || Chuto==false || digit==false || special==false){
+//                RegisterPasswordEditText.setError("Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character");
+//                RegisterPasswordEditText.requestFocus();
+//                return;
+//            }
+//        }
+        createInformationTable(email);
         progressBar.setVisibility(View.VISIBLE); // Show progress bar
 
         // Register the user with Firebase Authentication
@@ -161,20 +161,23 @@ public class registrationPage extends AppCompatActivity implements View.OnClickL
     }
     private void saveUserInfo(String email, String password, String name, String phone, String profilePictureUrl, String coverPhotoUrl) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference(encodeEmail(email));
+        DatabaseReference myRef = database.getReference("Users");
+        DatabaseReference usersData = FirebaseDatabase.getInstance().getReference("SearchALL");
 
         user usr = new user(name, password, phone, email, profilePictureUrl, coverPhotoUrl);
-        myRef.child("RegistrationPageInformation").setValue(usr).addOnCompleteListener(new OnCompleteListener<Void>() {
+        usersData.child(name).child(encodeEmail(email)).child("Name").setValue(name);
+        usersData.child(name).child(encodeEmail(email)).child("Email").setValue(email);
+        myRef.child(encodeEmail(email)).child("RegistrationPageInformation").setValue(usr).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 progressBar.setVisibility(View.GONE); // Hide progress bar after save attempt
                 if (task.isSuccessful()) {
                     Toast.makeText(registrationPage.this, "User information saved successfully", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(registrationPage.this, LoginActivity.class);
-                    intent.putExtra("USER_EMAIL", email);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 } else {
+                    Intent intent = new Intent(registrationPage.this,registrationPage.class);
                     Toast.makeText(registrationPage.this, "Failed to save user information: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -195,5 +198,17 @@ public class registrationPage extends AppCompatActivity implements View.OnClickL
         }
         RegisterPasswordEditText.setSelection(RegisterPasswordEditText.length());
         isPasswordVisible = !isPasswordVisible;
+    }
+    private void createInformationTable(String userEmail){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("Users");
+        myRef.child(encodeEmail(userEmail)).child("Information").child("about_me").setValue("");
+        myRef.child(encodeEmail(userEmail)).child("Information").child("education").setValue("");
+        myRef.child(encodeEmail(userEmail)).child("Information").child("hometown").setValue("");
+        myRef.child(encodeEmail(userEmail)).child("Information").child("social_links").setValue("");
+        myRef.child(encodeEmail(userEmail)).child("Information").child("workplace").setValue("");
+        myRef.child(encodeEmail(userEmail)).child("Information").child("skills").setValue("");
+        myRef.child(encodeEmail(userEmail)).child("Information").child("profilePictureUrl").setValue("");
+        myRef.child(encodeEmail(userEmail)).child("Information").child("coverPhotoUrl").setValue("");
     }
 }

@@ -124,9 +124,8 @@ public class LoginActivity extends AppCompatActivity {
         String userUserName = userEditText.getText().toString().trim();
         String userPassword = passwordEditText.getText().toString().trim();
         String encodedUserName = encodeEmail(userUserName);
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference(encodeEmail(userUserName)).child("RegistrationPageInformation");
-        DatabaseReference usersData = FirebaseDatabase.getInstance().getReference("All");
-
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("Users").child(encodedUserName).child("RegistrationPageInformation");
+        //DatabaseReference usersData = FirebaseDatabase.getInstance().getReference("All");
         progressBar.setVisibility(View.VISIBLE);
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -134,14 +133,13 @@ public class LoginActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE); // Hide progress bar
                 if (snapshot.exists()) {
                     String Name = snapshot.child("name").getValue(String.class);
-                    usersData.child(Name).child(encodedUserName).child("Name").setValue(Name);
-                    usersData.child(Name).child(encodedUserName).child("Email").setValue(userUserName);
+//                    usersData.child(Name).child(encodeEmail(userUserName)).child("Name").setValue(Name);
+//                    usersData.child(Name).child(encodeEmail(userUserName)).child("Email").setValue(userUserName);
                     String passwordFromDB = snapshot.child("password").getValue(String.class);
                     if (Objects.equals(passwordFromDB, userPassword)) {
                         // Password is correct, proceed to profile activity
                         Intent intent = new Intent(LoginActivity.this, HomePage.class);
                         intent.putExtra("USER_EMAIL", userUserName);
-                        Toast.makeText(LoginActivity.this, Name, Toast.LENGTH_LONG).show();
                         startActivity(intent);
                     } else {
                         Toast.makeText(LoginActivity.this, "Incorrect password", Toast.LENGTH_SHORT).show();
