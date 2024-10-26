@@ -29,6 +29,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_10
         targetCompatibility = JavaVersion.VERSION_11
     }
+    packagingOptions {
+        exclude("META-INF/NOTICE.md")
+        exclude("META-INF/LICENSE.md")
+    }
     compileSdk = 34
 }
 
@@ -39,6 +43,7 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.firebase.auth)
+
     implementation(libs.firebase.database)
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.storage)
@@ -50,6 +55,10 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation("com.squareup.picasso:picasso:2.8")
     implementation ("com.squareup.picasso:picasso:2.71828")
+    implementation ("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
+    implementation ("com.sun.mail:android-mail:1.6.7")
+    implementation ("com.sun.mail:android-activation:1.6.7")
 }
 
 

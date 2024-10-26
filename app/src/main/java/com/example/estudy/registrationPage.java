@@ -164,7 +164,8 @@ public class registrationPage extends AppCompatActivity implements View.OnClickL
         DatabaseReference myRef = database.getReference("Users");
         DatabaseReference usersData = FirebaseDatabase.getInstance().getReference("SearchALL");
 
-        user usr = new user(name, password, phone, email, profilePictureUrl, coverPhotoUrl);
+        user usr = new user(
+                name, password, phone, email, profilePictureUrl, coverPhotoUrl);
         usersData.child(name).child(encodeEmail(email)).child("Name").setValue(name);
         usersData.child(name).child(encodeEmail(email)).child("Email").setValue(email);
         myRef.child(encodeEmail(email)).child("RegistrationPageInformation").setValue(usr).addOnCompleteListener(new OnCompleteListener<Void>() {

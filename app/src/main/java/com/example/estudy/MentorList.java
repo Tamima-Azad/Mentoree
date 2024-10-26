@@ -1,75 +1,93 @@
 package com.example.estudy;
 
-import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
+import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class MentorList extends AppCompatActivity {
-    ArrayList<MentorItemModel>arrItem=new ArrayList<>();
+    ArrayList<MentorItemModel> arrItem = new ArrayList<>();
+    RecyclerMentorItemAdapter adapter;
+    private TextView mentorList;
+    private String userEmail;
+    private long count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_mentor_list);
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) RecyclerView Mentorlist=findViewById(R.id.recylermentorlist);
+        mentorList = findViewById(R.id.mentorList);
 
-        Mentorlist.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView mentorListRecyclerView = findViewById(R.id.recylermentorlist);
+        mentorListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // MentorItemModel model=new MentorItemModel(R.drawable.ic_launcher_foreground,"ABC");
+        // Initialize adapter
+        adapter = new RecyclerMentorItemAdapter(this, arrItem);
+        mentorListRecyclerView.setAdapter(adapter);
 
-        //data add
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_background,"Tamima Azad"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_background,"B"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_background,"C"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_background,"D"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_background,"E"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_background,"F"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_background,"G"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_background,"H"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_background,"I"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_background,"J"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_background,"ABC"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_background,"ABC"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_background,"ABC"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_background,"ABC"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"ABC"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"ABC"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"k"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"M"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"T"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"ABC"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"ABCD"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"ABCE"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"ABCF"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"ABCG"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"ABCH"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"ABCI"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"ABCJ"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"ABCK"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"ABCL"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"ABCM"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"ABCM"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"ABCM"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"ABCM"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"ABCM"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"ABCM"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"ABCM"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"ABCM"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"ABCM"));
-        arrItem.add(new MentorItemModel(R.drawable.ic_launcher_foreground,"ABCM"));
-        //addapter works as like machine
-        RecyclerMentorItemAdapter adapter=new RecyclerMentorItemAdapter(this,arrItem);
-        Mentorlist.setAdapter(adapter);
+        Intent intent = getIntent();
+        userEmail = intent.getStringExtra("USER_EMAIL");
 
+        fetchMentorData(userEmail);
+        Mentors(userEmail);
+    }
+
+    private void fetchMentorData(String userEmail) {
+        DatabaseReference mentorRef = FirebaseDatabase.getInstance()
+                .getReference("Mentors")
+                .child(encodeEmail(userEmail));
+
+        mentorRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                arrItem.clear();
+                for (DataSnapshot mentorSnapshot : dataSnapshot.getChildren()) {
+                    for (DataSnapshot nameSnapshot : mentorSnapshot.getChildren()) {
+                        String mentorName = nameSnapshot.child("Name").getValue(String.class);
+                        String mentorEmail = nameSnapshot.child("Email").getValue(String.class);
+
+                        if (mentorName != null && mentorEmail != null) {
+                            arrItem.add(new MentorItemModel(mentorName, mentorEmail, userEmail));
+                        }
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(MentorList.this, "Failed to load mentors: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void Mentors(String userEmail) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Mentors").child(encodeEmail(userEmail));
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                long count = dataSnapshot.getChildrenCount();
+                Log.d("DataCount", "Number of entries: " + count);
+                mentorList.setText("Mentors: " + count);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("FirebaseError", "Error counting entries: " + databaseError.getMessage());
+            }
+        });
+    }
+
+    private String encodeEmail(String email) {
+        return email.replace(".", ",");
     }
 }

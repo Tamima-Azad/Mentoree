@@ -36,33 +36,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Welcome Back!"
-
                 android:textAlignment="center"
                 android:textColor="@color/purple"
                 android:textSize="30sp"
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/username"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/custom_edit_text"
-                android:drawableLeft="@drawable/user"
-                android:drawablePadding="8dp"
-                android:hint="Username/Email"
-                android:padding="8dp"
-                android:textColor="@color/black"
-                android:textColorHighlight="@color/cardview_dark_background" />
-
-            <EditText
-                android:id="@+id/password"
+                android:id="@+id/otpEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/custom_edit_text"
                 android:drawableLeft="@drawable/password"
-                android:drawableRight="@drawable/icons8_eye_100"
                 android:drawablePadding="8dp"
                 android:hint="OTP"
                 android:inputType="textPassword"
@@ -76,7 +61,7 @@
                 android:layout_height="60dp"
                 android:layout_marginTop="12dp"
                 android:backgroundTint="@color/purple"
-                android:text="login"
+                android:text="Verify"
                 android:textColor="@color/white"
                 android:textSize="26sp" />
         </LinearLayout>

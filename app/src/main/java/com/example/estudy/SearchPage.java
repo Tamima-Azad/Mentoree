@@ -110,12 +110,6 @@ public class SearchPage extends AppCompatActivity {
                                     }
                                 }
                             }
-//                        if (userName != null && userName.equalsIgnoreCase(name)) {
-//                            // Add matching user to the list
-//                            user3 user = new user3(userName, email);
-//                            userList.add(user);
-//                            userFound = true;
-//                        }
                         }
                     }
                 }

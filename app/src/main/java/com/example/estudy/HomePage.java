@@ -79,7 +79,6 @@ public class HomePage extends AppCompatActivity {
                 startActivity(profileIntent);
             }
         });
-        // Initialize Firebase Storage
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference("Users");
